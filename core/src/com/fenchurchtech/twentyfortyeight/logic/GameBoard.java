@@ -9,6 +9,22 @@ import java.util.List;
 import java.util.Optional;
 
 public class GameBoard {
+    private final Texture bkgrd = new Texture( Gdx.files.internal("background.png"));
+    private final Texture titleBlk = new  Texture(Gdx.files.internal("Title.png"));
+   // private final Texture exitBlk = new  Texture(Gdx.files.internal("Exit.png"));
+    private final Texture nb0Blik  = new Texture(Gdx.files.internal("blank.png"));
+    private final Texture  settingsBlik = new Texture(Gdx.files.internal("settings.png"));
+    private final Texture nb2Blk = new  Texture(Gdx.files.internal("2.png"));
+    private final Texture nb4Blk = new  Texture(Gdx.files.internal("4.png"));
+    private final Texture nb8Blk = new  Texture(Gdx.files.internal("8.png"));
+    private final Texture nb16Blk = new  Texture(Gdx.files.internal("16.png"));
+    private final Texture nb32Blk = new  Texture(Gdx.files.internal("32.png"));
+    private final Texture nb64Blk = new  Texture(Gdx.files.internal("64.png"));
+    private final Texture nb128Blk = new  Texture(Gdx.files.internal("128.png"));
+    private final Texture nb256Blk = new  Texture(Gdx.files.internal("256.png"));
+    private final Texture nb512Blk = new  Texture(Gdx.files.internal("512.png"));
+    private final Texture nb1024Blk = new  Texture(Gdx.files.internal("1024.png"));
+    private final Texture nb2048lk = new  Texture(Gdx.files.internal("2048.png"));
 
     public static List<NumberBlock> initializeBlocks(int maxRowsCols){
         List<NumberBlock> gameBoard = new ArrayList<>();
@@ -28,15 +44,13 @@ public class GameBoard {
         return gameBoard;
     }
 
-    public static void draw(List<NumberBlock> blocks, SpriteBatch batch){
+    public  void draw(List<NumberBlock> blocks, SpriteBatch batch){
         batch.begin();
         float x = 0.0f, y =600.0f;
 
-        Texture bkgrd = new Texture( Gdx.files.internal("background.png"));
-        Texture titleBlk = new  Texture(Gdx.files.internal("Title.png"));
-
         batch.draw(bkgrd, 0,0,480,800);
         batch.draw(titleBlk, 10,730,216,72);
+        batch.draw(settingsBlik, 390,730,50,50);
 
         for (NumberBlock nb: blocks
         ) {
@@ -46,11 +60,54 @@ public class GameBoard {
                 y= y - 95;
             }
 
-            batch.draw(nb.get_texture(), x, y,95,95);
+            batch.draw(retrieveTexture(nb.get_value()), x, y,95,95);
             x = x + 95;
         }
 
+      /*  y = y - 105;
+        batch.draw(exitBlk, 145, y);*/
         batch.end();
+    }
+
+    public Texture retrieveTexture(int value){
+        switch (value){
+            case 2:
+                return nb2Blk;
+
+            case 4:
+                return nb4Blk;
+
+            case 8:
+                return nb8Blk;
+
+            case 16:
+                return nb16Blk;
+
+            case 32:
+                return nb32Blk;
+
+            case 64:
+                return nb64Blk;
+
+            case 128:
+                return nb128Blk;
+
+            case 256:
+                return nb256Blk;
+
+            case 512:
+                return nb512Blk;
+
+            case 1024:
+                return nb1024Blk;
+
+            case 2048:
+                return nb2048lk;
+
+            default:
+                return nb0Blik;
+
+        }
     }
 
     public static boolean didGameBoardChange(List<NumberBlock> oldBoard, List<NumberBlock> newBoard){
@@ -77,7 +134,7 @@ public class GameBoard {
             }
 
             if(occurred > 2){
-                NumberBlock eb = findZeroBlock(board);
+                NumberBlock eb = findBlock(board, 0);
                 if(eb != null) {
                     eb.set_value(generateRandValue());
                     break;
@@ -90,10 +147,10 @@ public class GameBoard {
         }while(true);
     }
 
-    public static NumberBlock findZeroBlock(List<NumberBlock> gameBoard){
+    public static NumberBlock findBlock(List<NumberBlock> gameBoard, int value){
 
         for (NumberBlock blk: gameBoard) {
-            if(blk.get_value() == 0){
+            if(blk.get_value() == value){
                 return blk;
             }
         }
@@ -120,29 +177,13 @@ public class GameBoard {
                     final int  iter = i;
 
                     if(shiftDir.equals("east")) {
-/*                        tokens.stream().filter(p -> p.get_column() == iter).forEach((nb) -> {
-                            Optional<NumberBlock> nextBlock = tokens.stream().filter((p) -> p.get_column() == iter - 1 && p.get_row() == nb.get_row()).findFirst();
-                            if(assignShiftValue(nb, nextBlock)){
-                                executeShift(shiftDir, tokens);
-                            }
-                        });*/
                         for(int col = 4; col > 0; col--) {
                             if (assignShiftValue(searchArray(i, col, tokens), searchArray(i, col - 1, tokens))) {
                                return true;
                             }
                         }
-
                     }
                     if(shiftDir.equals("south")){
-
-                       /* tokens.stream().filter(p -> p.get_row() == iter).forEach((nb) -> {
-
-                            Optional<NumberBlock> nextBlock = tokens.stream().filter((p) -> p.get_row() == iter - 1 && p.get_column() == nb.get_column()).findFirst();
-
-                            if(assignShiftValue(nb, nextBlock)){
-                                executeShift(shiftDir, tokens);
-                            }
-                        });*/
                         for(int row = 4; row > 0; row--){
                             if(assignShiftValue(searchArray(row, i, tokens), searchArray(row-1, i, tokens))){
                                 return true;

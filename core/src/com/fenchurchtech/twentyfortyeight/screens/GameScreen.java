@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.fenchurchtech.twentyfortyeight.MainGame;
@@ -23,7 +24,10 @@ public class GameScreen implements Screen, IUserAction {
     List<NumberBlock> playBoard;
     Viewport viewport;
     String swipeDirecton ="";
-    private static Map<String, Integer> gameDirections = new HashMap<>();
+    GameBoard gameBoard = new GameBoard();
+    private static String[] gameDirections;
+    private List<NumberBlock> cpyBoard;
+    private final Vector3 touchPos;
 
     public GameScreen(MainGame game) {
         _game = game;
@@ -34,15 +38,16 @@ public class GameScreen implements Screen, IUserAction {
         camera.position.set(480/2, 800/2,0);
         viewport.apply();
 
-        gameDirections.put("north", 1);
-        gameDirections.put("south", 2);
-        gameDirections.put("east", 3);
-        gameDirections.put("west", 4);
+        gameDirections = new String[]{"north", "south","east", "west", };
+
+        touchPos = new Vector3(0, 0, 0);
+
     }
 
     @Override
     public void show() {
         playBoard = GameBoard.initializeBlocks(4);
+        cpyBoard = GameBoard.copyGameBoard(playBoard);
     }
 
     @Override
@@ -53,25 +58,28 @@ public class GameScreen implements Screen, IUserAction {
         camera.update();
         _game.batch.setProjectionMatrix(camera.combined);
 
-        GameBoard.draw(playBoard, _game.batch);
+        gameBoard.draw(playBoard, _game.batch);
 
         if(!swipeDirecton.isEmpty()){
-            List<NumberBlock> cpyBoard = GameBoard.copyGameBoard(playBoard);
-
             //returns false when all moves have been made
             if(!GameBoard.executeShift(swipeDirecton,playBoard)) {
                 swipeDirecton = "";
                 resetBoardState(playBoard);
-               // if(GameBoard.didGameBoardChange(cpyBoard, playBoard)) {
+                if(GameBoard.didGameBoardChange(cpyBoard, playBoard)) {
                     GameBoard.setNumberBlock(playBoard);
-             //   }
+                }
             }
+        }else{
+            cpyBoard = GameBoard.copyGameBoard(playBoard);
         }
 
-        //code here to transitiion to end game screen
+
+        //code here to transition to end game screen
        if(isGameOver(playBoard)){
            playBoard = GameBoard.initializeBlocks(4);
        }
+
+
     }
 
     @Override
@@ -123,7 +131,19 @@ public class GameScreen implements Screen, IUserAction {
 
     @Override
     public void touched(TouchInfo touchPoint) {
+        touchPos.x = touchPoint.touchX;
+        touchPos.y = touchPoint.touchY;
+        camera.unproject(touchPos);
 
+/*        if(touchPos.x <= 272
+                && touchPos.x >= 145
+                && touchPos.y <= 162
+                && touchPos.y >= 115){
+
+            gameBoard = null;
+
+
+        }*/
     }
 
     private void resetBoardState(List<NumberBlock> gameBoard){
@@ -140,29 +160,23 @@ public class GameScreen implements Screen, IUserAction {
 
         if( allSquaresFull(playBoard)){
             //Check to see if there are any moves left
-            for (String key : gameDirections.keySet()
-            ) {
+            for (String key : gameDirections) {
                 List<NumberBlock> northList = GameBoard.copyGameBoard(playBoard);
                 GameBoard.executeShift(key,northList);
                 if(GameBoard.didGameBoardChange(playBoard,northList))
                     return false;
             }
-
-            //GameBoard.draw(playBoard);
             return true;
         }
 
         return false;
-
     }
 
     private static boolean TwentyFortyEightExists(List<NumberBlock> board){
-        Optional<NumberBlock> eb = board.stream().filter(f ->  f.get_value() == 2048).findAny();
-        return eb.isPresent();
+       return GameBoard.findBlock(board, 2048) != null;
     }
 
     private static boolean allSquaresFull(List<NumberBlock> board){
-        Optional<NumberBlock> eb = board.stream().filter(f ->  f.get_value() == 0).findAny();
-        return !eb.isPresent();
+        return GameBoard.findBlock(board, 0) == null;
     }
 }
