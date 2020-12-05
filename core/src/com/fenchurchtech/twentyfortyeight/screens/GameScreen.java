@@ -33,7 +33,6 @@ public class GameScreen implements Screen, IUserAction {
         _game = game;
 
         camera = new OrthographicCamera();
-        //camera.setToOrtho(false, 480, 800);
         viewport = new StretchViewport(480,800,camera);
         camera.position.set(480/2, 800/2,0);
         viewport.apply();
@@ -41,12 +40,11 @@ public class GameScreen implements Screen, IUserAction {
         gameDirections = new String[]{"north", "south","east", "west", };
 
         touchPos = new Vector3(0, 0, 0);
-
     }
 
     @Override
     public void show() {
-        playBoard = GameBoard.initializeBlocks(4);
+        playBoard = gameBoard.initializeBlocks(4);
         cpyBoard = GameBoard.copyGameBoard(playBoard);
     }
 
@@ -62,7 +60,7 @@ public class GameScreen implements Screen, IUserAction {
 
         if(!swipeDirecton.isEmpty()){
             //returns false when all moves have been made
-            if(!GameBoard.executeShift(swipeDirecton,playBoard)) {
+            if(!gameBoard.executeShift(swipeDirecton,playBoard)) {
                 swipeDirecton = "";
                 resetBoardState(playBoard);
                 if(GameBoard.didGameBoardChange(cpyBoard, playBoard)) {
@@ -73,13 +71,10 @@ public class GameScreen implements Screen, IUserAction {
             cpyBoard = GameBoard.copyGameBoard(playBoard);
         }
 
-
         //code here to transition to end game screen
        if(isGameOver(playBoard)){
-           playBoard = GameBoard.initializeBlocks(4);
+           playBoard = gameBoard.initializeBlocks(4);
        }
-
-
     }
 
     @Override
@@ -105,7 +100,7 @@ public class GameScreen implements Screen, IUserAction {
 
     @Override
     public void dispose() {
-
+        gameBoard.dispose();
     }
 
     @Override
@@ -162,7 +157,7 @@ public class GameScreen implements Screen, IUserAction {
             //Check to see if there are any moves left
             for (String key : gameDirections) {
                 List<NumberBlock> northList = GameBoard.copyGameBoard(playBoard);
-                GameBoard.executeShift(key,northList);
+                gameBoard.executeShift(key,northList);
                 if(GameBoard.didGameBoardChange(playBoard,northList))
                     return false;
             }

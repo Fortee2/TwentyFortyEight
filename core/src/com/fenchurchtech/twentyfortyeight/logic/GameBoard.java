@@ -1,12 +1,13 @@
 package com.fenchurchtech.twentyfortyeight.logic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.*;
+//import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class GameBoard {
     private final Texture bkgrd = new Texture( Gdx.files.internal("background.png"));
@@ -26,7 +27,9 @@ public class GameBoard {
     private final Texture nb1024Blk = new  Texture(Gdx.files.internal("1024.png"));
     private final Texture nb2048lk = new  Texture(Gdx.files.internal("2048.png"));
 
-    public static List<NumberBlock> initializeBlocks(int maxRowsCols){
+    private final Sound collapsedSound =  Gdx.audio.newSound(Gdx.files.internal("tick_002.ogg"));
+
+    public List<NumberBlock> initializeBlocks(int maxRowsCols){
         List<NumberBlock> gameBoard = new ArrayList<>();
 
         for (int i = 1; i < maxRowsCols +1 ; i++) {
@@ -73,37 +76,26 @@ public class GameBoard {
         switch (value){
             case 2:
                 return nb2Blk;
-
             case 4:
                 return nb4Blk;
-
             case 8:
                 return nb8Blk;
-
             case 16:
                 return nb16Blk;
-
             case 32:
                 return nb32Blk;
-
             case 64:
                 return nb64Blk;
-
             case 128:
                 return nb128Blk;
-
             case 256:
                 return nb256Blk;
-
             case 512:
                 return nb512Blk;
-
             case 1024:
                 return nb1024Blk;
-
             case 2048:
                 return nb2048lk;
-
             default:
                 return nb0Blik;
 
@@ -169,52 +161,67 @@ public class GameBoard {
         return newList;
     }
 
-    public static boolean executeShift(String shiftDir, List<NumberBlock> tokens){
-        switch (shiftDir){
+    public boolean executeShift(String shiftDir, List<NumberBlock> tokens){
+        int searchDir =  0, startValue = 0;
+        boolean lockRow = true;
+
+        switch (shiftDir) {
             case "east":
             case "south":
-                for (int i = 4 ; i > 0; i--) {
-                    final int  iter = i;
-
-                    if(shiftDir.equals("east")) {
-                        for(int col = 4; col > 0; col--) {
-                            if (assignShiftValue(searchArray(i, col, tokens), searchArray(i, col - 1, tokens))) {
-                               return true;
-                            }
-                        }
-                    }
-                    if(shiftDir.equals("south")){
-                        for(int row = 4; row > 0; row--){
-                            if(assignShiftValue(searchArray(row, i, tokens), searchArray(row-1, i, tokens))){
-                                return true;
-                            }
-                        }
-                    }
-                }
-            case "west":
-            case "north":
-                for (int i = 1; i < 5; i++){
-                    final int  iter = i;
-                    if(shiftDir.equals("west")) {
-                        for(int col = 1; col < 5; col++) {
-                            if (assignShiftValue(searchArray(i, col, tokens), searchArray(i, col + 1, tokens))) {
-                                return true;
-                            }
-                        }
-                    }
-                    if(shiftDir.equals("north")){
-                        for(int row = 1; row < 5; row++){
-                            if(assignShiftValue(searchArray(row, i, tokens), searchArray(row + 1, i, tokens))){
-                                return true;
-                            }
-                        }
-
-                    }
-                }
+                searchDir = -1;
+                startValue = 4;
+                break;
+            default:
+                searchDir = 1;
+                startValue = 1;
                 break;
         }
 
+        switch (shiftDir) {
+            case "north":
+            case "south":
+                lockRow = false;
+                break;
+        }
+
+        for(int x = startValue;x > 0 && x < 5; x = x + searchDir) {
+            for(int y = startValue; y > 0 && y < 5; y = y + searchDir) {
+                if(lockRow){
+                    if (assignShiftValue(
+                            searchArray(x, y, tokens),
+                            searchArray(x, y + searchDir, tokens),
+                            true)) {
+                        return true;  //break when a match is found.  The function will get called
+                        // again until all matches are found.   This gives appearance of tiles sliding.
+                    }
+                }else{
+                    if(assignShiftValue(searchArray(y, x, tokens),
+                            searchArray(y +searchDir, x, tokens),
+                            true)){
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
+    }
+
+    public void dispose(){
+        nb2048lk.dispose();
+        nb1024Blk.dispose();
+        nb512Blk.dispose();
+        nb256Blk.dispose();
+        nb128Blk.dispose();
+        nb64Blk.dispose();
+        nb32Blk.dispose();
+        nb16Blk.dispose();
+        nb8Blk.dispose();
+        nb4Blk.dispose();
+        nb2Blk.dispose();
+        bkgrd.dispose();
+        titleBlk.dispose();
+        settingsBlik.dispose();
+        collapsedSound.dispose();
     }
 
     private static NumberBlock searchArray(int row, int col, List<NumberBlock> blks){
@@ -247,7 +254,7 @@ public class GameBoard {
         }
     }
 
-    private static boolean assignShiftValue(NumberBlock nb, NumberBlock nextBlock){
+    private boolean assignShiftValue(NumberBlock nb, NumberBlock nextBlock, boolean playSound){
         if(nextBlock != null){
 
             if(nextBlock.get_value() == 0){
@@ -258,6 +265,9 @@ public class GameBoard {
                 nb.set_value(nb.get_value() * 2);
                 nextBlock.set_value(0);
                 nb.set_state("c");
+                if(playSound){
+                    collapsedSound.play();
+                }
                 return true;
             }
 
@@ -272,7 +282,6 @@ public class GameBoard {
     }
 
     private static int generateRandValue(){
-
         int min =2, max =4,  range = max - min;
         int rand;
 
@@ -284,11 +293,8 @@ public class GameBoard {
     }
 
     private static int generateRandPos(Integer maxColumns){
-
         int min =1, max =maxColumns,  range = max - min;
 
         return (int)(Math.random() * range) + min;
     }
-
-
 }
