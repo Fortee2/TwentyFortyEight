@@ -11,8 +11,10 @@ import java.util.List;
 public class GameBoard {
     private final Texture bkgrd = new Texture( Gdx.files.internal("background.png"));
     private final Texture titleBlk = new  Texture(Gdx.files.internal("Title.png"));
-    private final Texture nb0Blik  = new Texture(Gdx.files.internal("wood_blank.png"));
+    private final Texture nb0Blk = new Texture(Gdx.files.internal("wood_blank.png"));
+    private final Texture gameOverBlk  = new Texture(Gdx.files.internal("Gameover.png"));
     private final Texture overlay = new Texture(Gdx.files.internal("overlay.png"));
+    private final Texture retryBlk = new Texture(Gdx.files.internal("retry.png"));
     private final Texture volumeBlk = new Texture(Gdx.files.internal("volume.png"));
     private final Texture muteBlk = new Texture(Gdx.files.internal("mute.png"));
     private final Texture nb2Blk = new  Texture(Gdx.files.internal("wood_blocks.png"));
@@ -71,27 +73,27 @@ public class GameBoard {
         float x = 0.0f, y =600.0f;
 
         batch.draw(bkgrd, 0,0,480,800);
-        batch.draw(titleBlk, 10,675,95,115);
+        batch.draw(titleBlk, 10,675,95,95);
         if(playSound) {
             batch.draw(volumeBlk, 390, 730, 50, 50);
         }else {
             batch.draw(muteBlk, 390, 730, 50, 50);
         }
 
-        for (NumberBlock nb: blocks
-        ) {
-
-            if(nb.get_column() == 1){
-                x = 50;
-                y= y - 95;
-            }
-
-            batch.draw(retrieveTexture(nb.get_value()), x, y,95,95);
-            x = x + 95;
-        }
-
         if(gameOver){
             batch.draw(overlay, 480, 800);
+            batch.draw(gameOverBlk, 10,400,460,60 );
+            batch.draw(retryBlk, 115,280,230,100);
+        }else{
+            for (NumberBlock nb: blocks) {
+                if(nb.get_column() == 1){
+                    x = 50;
+                    y= y - 95;
+                }
+
+                batch.draw(retrieveTexture(nb.get_value()), x, y,95,95);
+                x = x + 95;
+            }
         }
 
         batch.end();
@@ -122,7 +124,7 @@ public class GameBoard {
             case 2048:
                 return nb2048lk;
             default:
-                return nb0Blik;
+                return nb0Blk;
 
         }
     }

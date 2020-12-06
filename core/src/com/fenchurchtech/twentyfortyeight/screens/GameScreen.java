@@ -54,6 +54,10 @@ public class GameScreen implements Screen, IUserAction {
 
     @Override
     public void show() {
+        startGame();
+    }
+
+    private void startGame() {
         playBoard = gameBoard.initializeBlocks(4);
         cpyBoard = GameBoard.copyGameBoard(playBoard);
     }
@@ -87,7 +91,6 @@ public class GameScreen implements Screen, IUserAction {
         //code here to transition to end game screen
        if(isGameOver(playBoard)){
            gameBoard.setGameOver( true);
-           playBoard = gameBoard.initializeBlocks(4);
        }
     }
 
@@ -144,14 +147,24 @@ public class GameScreen implements Screen, IUserAction {
         touchPos.y = touchPoint.touchY;
         camera.unproject(touchPos);
 
-        if(touchPos.x <= 440
-                && touchPos.x >= 390
-                && touchPos.y <= 780
-                && touchPos.y >= 730){
+        if(gameBoard.isGameOver()){
+            if(touchPos.x <= 345
+                && touchPos.x >=115
+                && touchPos.y <= 380
+                && touchPos.y >= 280){
+                gameBoard.setGameOver(false);
+                startGame();
+            }
+        }else {
+            if (touchPos.x <= 440
+                    && touchPos.x >= 390
+                    && touchPos.y <= 780
+                    && touchPos.y >= 730) {
 
-            gameBoard.setPlaySound(!gameBoard.isPlaySound());
-            //dispose();
+                gameBoard.setPlaySound(!gameBoard.isPlaySound());
+                //dispose();
 
+            }
         }
     }
 
