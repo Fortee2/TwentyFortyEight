@@ -2,7 +2,6 @@ package com.fenchurchtech.twentyfortyeight.logic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.*;
-//import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -12,10 +11,11 @@ import java.util.List;
 public class GameBoard {
     private final Texture bkgrd = new Texture( Gdx.files.internal("background.png"));
     private final Texture titleBlk = new  Texture(Gdx.files.internal("Title.png"));
-   // private final Texture exitBlk = new  Texture(Gdx.files.internal("Exit.png"));
-    private final Texture nb0Blik  = new Texture(Gdx.files.internal("blank.png"));
-    private final Texture  settingsBlik = new Texture(Gdx.files.internal("settings.png"));
-    private final Texture nb2Blk = new  Texture(Gdx.files.internal("2.png"));
+    private final Texture nb0Blik  = new Texture(Gdx.files.internal("wood_blank.png"));
+    private final Texture overlay = new Texture(Gdx.files.internal("overlay.png"));
+    private final Texture volumeBlk = new Texture(Gdx.files.internal("volume.png"));
+    private final Texture muteBlk = new Texture(Gdx.files.internal("mute.png"));
+    private final Texture nb2Blk = new  Texture(Gdx.files.internal("wood_blocks.png"));
     private final Texture nb4Blk = new  Texture(Gdx.files.internal("4.png"));
     private final Texture nb8Blk = new  Texture(Gdx.files.internal("8.png"));
     private final Texture nb16Blk = new  Texture(Gdx.files.internal("16.png"));
@@ -27,7 +27,26 @@ public class GameBoard {
     private final Texture nb1024Blk = new  Texture(Gdx.files.internal("1024.png"));
     private final Texture nb2048lk = new  Texture(Gdx.files.internal("2048.png"));
 
-    private final Sound collapsedSound =  Gdx.audio.newSound(Gdx.files.internal("tick_002.ogg"));
+    private final Sound collapsedSound =  Gdx.audio.newSound(Gdx.files.internal("click_005.ogg"));
+
+    private boolean playSound = true;
+    private boolean gameOver = false;
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    public boolean isPlaySound() {
+        return playSound;
+    }
+
+    public void setPlaySound(boolean playSound) {
+        this.playSound = playSound;
+    }
 
     public List<NumberBlock> initializeBlocks(int maxRowsCols){
         List<NumberBlock> gameBoard = new ArrayList<>();
@@ -52,8 +71,12 @@ public class GameBoard {
         float x = 0.0f, y =600.0f;
 
         batch.draw(bkgrd, 0,0,480,800);
-        batch.draw(titleBlk, 10,730,216,72);
-        batch.draw(settingsBlik, 390,730,50,50);
+        batch.draw(titleBlk, 10,675,95,115);
+        if(playSound) {
+            batch.draw(volumeBlk, 390, 730, 50, 50);
+        }else {
+            batch.draw(muteBlk, 390, 730, 50, 50);
+        }
 
         for (NumberBlock nb: blocks
         ) {
@@ -67,8 +90,10 @@ public class GameBoard {
             x = x + 95;
         }
 
-      /*  y = y - 105;
-        batch.draw(exitBlk, 145, y);*/
+        if(gameOver){
+            batch.draw(overlay, 480, 800);
+        }
+
         batch.end();
     }
 
@@ -102,7 +127,7 @@ public class GameBoard {
         }
     }
 
-    public static boolean didGameBoardChange(List<NumberBlock> oldBoard, List<NumberBlock> newBoard){
+    public boolean didGameBoardChange(List<NumberBlock> oldBoard, List<NumberBlock> newBoard){
         for (int i = 0; i < oldBoard.size(); i++) {
             if(oldBoard.get(i).get_value() != newBoard.get(i).get_value())
             {
@@ -189,15 +214,13 @@ public class GameBoard {
                 if(lockRow){
                     if (assignShiftValue(
                             searchArray(x, y, tokens),
-                            searchArray(x, y + searchDir, tokens),
-                            true)) {
+                            searchArray(x, y + searchDir, tokens))) {
                         return true;  //break when a match is found.  The function will get called
                         // again until all matches are found.   This gives appearance of tiles sliding.
                     }
                 }else{
                     if(assignShiftValue(searchArray(y, x, tokens),
-                            searchArray(y +searchDir, x, tokens),
-                            true)){
+                            searchArray(y +searchDir, x, tokens))){
                         return true;
                     }
                 }
@@ -220,7 +243,7 @@ public class GameBoard {
         nb2Blk.dispose();
         bkgrd.dispose();
         titleBlk.dispose();
-        settingsBlik.dispose();
+        volumeBlk.dispose();
         collapsedSound.dispose();
     }
 
@@ -254,7 +277,7 @@ public class GameBoard {
         }
     }
 
-    private boolean assignShiftValue(NumberBlock nb, NumberBlock nextBlock, boolean playSound){
+    private boolean assignShiftValue(NumberBlock nb, NumberBlock nextBlock){
         if(nextBlock != null){
 
             if(nextBlock.get_value() == 0){
@@ -265,9 +288,6 @@ public class GameBoard {
                 nb.set_value(nb.get_value() * 2);
                 nextBlock.set_value(0);
                 nb.set_state("c");
-                if(playSound){
-                    collapsedSound.play();
-                }
                 return true;
             }
 

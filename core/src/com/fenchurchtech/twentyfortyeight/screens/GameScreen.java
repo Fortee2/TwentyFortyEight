@@ -2,11 +2,18 @@ package com.fenchurchtech.twentyfortyeight.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.fenchurchtech.twentyfortyeight.MainGame;
@@ -25,21 +32,24 @@ public class GameScreen implements Screen, IUserAction {
     Viewport viewport;
     String swipeDirecton ="";
     GameBoard gameBoard = new GameBoard();
+
     private static String[] gameDirections;
     private List<NumberBlock> cpyBoard;
     private final Vector3 touchPos;
+    private final Sound collapsedSound =  Gdx.audio.newSound(Gdx.files.internal("click_005.ogg"));
 
     public GameScreen(MainGame game) {
         _game = game;
-
         camera = new OrthographicCamera();
         viewport = new StretchViewport(480,800,camera);
+
         camera.position.set(480/2, 800/2,0);
         viewport.apply();
 
         gameDirections = new String[]{"north", "south","east", "west", };
 
         touchPos = new Vector3(0, 0, 0);
+
     }
 
     @Override
@@ -63,7 +73,10 @@ public class GameScreen implements Screen, IUserAction {
             if(!gameBoard.executeShift(swipeDirecton,playBoard)) {
                 swipeDirecton = "";
                 resetBoardState(playBoard);
-                if(GameBoard.didGameBoardChange(cpyBoard, playBoard)) {
+                if(gameBoard.didGameBoardChange(cpyBoard, playBoard)) {
+                    if(gameBoard.isPlaySound()){
+                        collapsedSound.play();
+                    }
                     GameBoard.setNumberBlock(playBoard);
                 }
             }
@@ -73,6 +86,7 @@ public class GameScreen implements Screen, IUserAction {
 
         //code here to transition to end game screen
        if(isGameOver(playBoard)){
+           gameBoard.setGameOver( true);
            playBoard = gameBoard.initializeBlocks(4);
        }
     }
@@ -130,15 +144,15 @@ public class GameScreen implements Screen, IUserAction {
         touchPos.y = touchPoint.touchY;
         camera.unproject(touchPos);
 
-/*        if(touchPos.x <= 272
-                && touchPos.x >= 145
-                && touchPos.y <= 162
-                && touchPos.y >= 115){
+        if(touchPos.x <= 440
+                && touchPos.x >= 390
+                && touchPos.y <= 780
+                && touchPos.y >= 730){
 
-            gameBoard = null;
+            gameBoard.setPlaySound(!gameBoard.isPlaySound());
+            //dispose();
 
-
-        }*/
+        }
     }
 
     private void resetBoardState(List<NumberBlock> gameBoard){
@@ -158,7 +172,7 @@ public class GameScreen implements Screen, IUserAction {
             for (String key : gameDirections) {
                 List<NumberBlock> northList = GameBoard.copyGameBoard(playBoard);
                 gameBoard.executeShift(key,northList);
-                if(GameBoard.didGameBoardChange(playBoard,northList))
+                if(gameBoard.didGameBoardChange(playBoard,northList))
                     return false;
             }
             return true;
