@@ -11,7 +11,6 @@ import com.fenchurchtech.twentyfortyeight.screens.InputDecoder;
 
 public class MainGame extends Game {
 	public SpriteBatch batch;
-	public Texture img;
 	
 	@Override
 	public void create () {
@@ -30,6 +29,5 @@ public class MainGame extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
 	}
 }

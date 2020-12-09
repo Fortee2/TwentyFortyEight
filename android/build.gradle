@@ -1,6 +1,6 @@
 android {
     buildToolsVersion "30.0.2"
-    compileSdkVersion 29
+    compileSdkVersion 30
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -19,9 +19,9 @@ android {
     defaultConfig {
         applicationId "com.fenchurchtech.twentyfortyeight"
         minSdkVersion 15
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 30
+        versionCode 2
+        versionName "1.001"
     }
     buildTypes {
         release {
