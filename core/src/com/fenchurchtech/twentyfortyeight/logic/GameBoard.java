@@ -2,37 +2,85 @@ package com.fenchurchtech.twentyfortyeight.logic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.*;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameBoard {
-    private final Texture bkgrd = new Texture( Gdx.files.internal("background.png"));
-    private final Texture titleBlk = new  Texture(Gdx.files.internal("Title.png"));
-    private final Texture nb0Blk = new Texture(Gdx.files.internal("wood_blank.png"));
-    private final Texture gameOverBlk  = new Texture(Gdx.files.internal("Gameover.png"));
-    private final Texture overlay = new Texture(Gdx.files.internal("overlay.png"));
-    private final Texture retryBlk = new Texture(Gdx.files.internal("retry.png"));
-    private final Texture volumeBlk = new Texture(Gdx.files.internal("volume.png"));
-    private final Texture muteBlk = new Texture(Gdx.files.internal("mute.png"));
-    private final Texture nb2Blk = new  Texture(Gdx.files.internal("wood_blocks.png"));
-    private final Texture nb4Blk = new  Texture(Gdx.files.internal("4.png"));
-    private final Texture nb8Blk = new  Texture(Gdx.files.internal("8.png"));
-    private final Texture nb16Blk = new  Texture(Gdx.files.internal("16.png"));
-    private final Texture nb32Blk = new  Texture(Gdx.files.internal("32.png"));
-    private final Texture nb64Blk = new  Texture(Gdx.files.internal("64.png"));
-    private final Texture nb128Blk = new  Texture(Gdx.files.internal("128.png"));
-    private final Texture nb256Blk = new  Texture(Gdx.files.internal("256.png"));
-    private final Texture nb512Blk = new  Texture(Gdx.files.internal("512.png"));
-    private final Texture nb1024Blk = new  Texture(Gdx.files.internal("1024.png"));
-    private final Texture nb2048lk = new  Texture(Gdx.files.internal("2048.png"));
+    private final Sprite bkgrd;
+    private final Sprite titleBlk ;
+    private final Sprite nb0Blk ;
+    private final Sprite overlay;
+    private final Sprite retryBlk;
+    private final Sprite volumeBlk;
+    private final Sprite settingsBlk;
+    private final Sprite muteBlk;
+    private final Sprite gameOverBlk;
+    private final Sprite nb2Blk;
+    private final Sprite nb4Blk;
+    private final Sprite nb8Blk;
+    private final Sprite nb16Blk;
+    private final Sprite nb32Blk;
+    private final Sprite nb64Blk;
+    private final Sprite nb128Blk;
+    private final Sprite nb256Blk;
+    private final Sprite nb512Blk;
+    private final Sprite nb1024Blk;
+    private final Sprite nb2048lk;
+    private final Sprite whiteBlk;
 
     private final Sound collapsedSound =  Gdx.audio.newSound(Gdx.files.internal("click_005.ogg"));
 
+    public TextureAtlas textureAtlas;
+
     private boolean playSound = true;
     private boolean gameOver = false;
+    private int moveCount = 0;
+
+    public  GameBoard(){
+        textureAtlas =  new TextureAtlas(Gdx.files.internal("sprites.txt"));
+
+        bkgrd = textureAtlas.createSprite("background");
+
+         nb4Blk =  textureAtlas.createSprite("4");
+         nb8Blk =  textureAtlas.createSprite("8");
+         nb16Blk =  textureAtlas.createSprite("16");
+         nb32Blk =  textureAtlas.createSprite("32");
+         nb64Blk =  textureAtlas.createSprite("64");
+         nb128Blk =  textureAtlas.createSprite("128");
+         nb256Blk =  textureAtlas.createSprite("256");
+         nb512Blk =  textureAtlas.createSprite("512");
+         nb1024Blk =  textureAtlas.createSprite("1024");
+         nb2048lk =  textureAtlas.createSprite("2048");
+         whiteBlk =  textureAtlas.createSprite("white");
+
+         titleBlk =   textureAtlas.createSprite("Title");
+         nb0Blk =  textureAtlas.createSprite("wood_blank");
+         gameOverBlk  =  textureAtlas.createSprite("Gameover");
+         overlay =  textureAtlas.createSprite("overlay");
+         retryBlk =  textureAtlas.createSprite("retry");
+         volumeBlk =  textureAtlas.createSprite("volume");
+         settingsBlk =  textureAtlas.createSprite("settings");
+         muteBlk =  textureAtlas.createSprite("mute");
+         nb2Blk =   textureAtlas.createSprite("wood_blocks");
+    }
+
+    public  int getMoveCount(){
+        return moveCount;
+    }
+
+    public void incrementMoveCount(){
+        moveCount++;
+    }
+
+    public void resetMoveCount(){
+        moveCount = 0;
+    }
 
     public boolean isGameOver() {
         return gameOver;
@@ -68,38 +116,62 @@ public class GameBoard {
         return gameBoard;
     }
 
-    public  void draw(List<NumberBlock> blocks, SpriteBatch batch){
+    public  void draw(List<NumberBlock> blocks, SpriteBatch batch, BitmapFont bitmapFont){
         batch.begin();
         float x = 0.0f, y =600.0f;
 
         batch.draw(bkgrd, 0,0,480,800);
-        batch.draw(titleBlk, 10,675,95,95);
-        if(playSound) {
-            batch.draw(volumeBlk, 390, 730, 50, 50);
-        }else {
-            batch.draw(muteBlk, 390, 730, 50, 50);
-        }
+        batch.draw(titleBlk, 10,675,75,75);
+
+/*        bitmapFont.setColor(Color.WHITE);
+        bitmapFont.getData().setScale(2);
+        bitmapFont.draw(batch,"Time:  00:01", 240, 730,95,10,false );
+        bitmapFont.draw(batch,"Moves:  1", 390, 625,95,10,false );*/
 
         if(gameOver){
-            batch.draw(overlay, 480, 800);
-            batch.draw(gameOverBlk, 10,400,460,60 );
-            batch.draw(retryBlk, 115,280,230,100);
+            drawGameOver(batch, bitmapFont);
         }else{
-            for (NumberBlock nb: blocks) {
-                if(nb.get_column() == 1){
-                    x = 50;
-                    y= y - 95;
-                }
-
-                batch.draw(retrieveTexture(nb.get_value()), x, y,95,95);
-                x = x + 95;
-            }
+            drawToolbar(batch);
+            drawNumberBlocks(blocks, batch, x, y);
         }
 
         batch.end();
     }
 
-    public Texture retrieveTexture(int value){
+    private void drawNumberBlocks(List<NumberBlock> blocks, SpriteBatch batch, float x, float y) {
+        for (NumberBlock nb: blocks) {
+            if(nb.get_column() == 1){
+                x = 50;
+                y= y - 95;
+            }
+
+            batch.draw(retrieveSprite(nb.get_value()), x, y,95,95);
+            x = x + 95;
+        }
+    }
+
+    private void drawGameOver(SpriteBatch batch, BitmapFont bitmapFont) {
+        batch.draw(overlay, 0, 0, 480, 800);
+        batch.draw(gameOverBlk, 10,400,460,60 );
+        bitmapFont.setColor(Color.WHITE);
+        bitmapFont.getData().setScale(2);
+        bitmapFont.draw(batch, String.format("Moves: %s", getMoveCount()),115,400);
+        batch.draw(retryBlk, 115,280,230,100);
+    }
+
+    private void drawToolbar(SpriteBatch batch) {
+        batch.draw(whiteBlk,0,730, 480,70);
+
+        if(playSound) {
+            batch.draw(volumeBlk, 390, 740, 50, 50);
+        }else {
+            batch.draw(muteBlk, 390, 740, 50, 50);
+        }
+
+        batch.draw(settingsBlk, 320, 740, 50, 50);
+    }
+
+    private Sprite retrieveSprite(int value){
         switch (value){
             case 2:
                 return nb2Blk;
@@ -189,7 +261,7 @@ public class GameBoard {
     }
 
     public boolean executeShift(String shiftDir, List<NumberBlock> tokens){
-        int searchDir =  0, startValue = 0;
+        int searchDir, startValue;
         boolean lockRow = true;
 
         switch (shiftDir) {
@@ -232,28 +304,16 @@ public class GameBoard {
     }
 
     public void dispose(){
-        nb2048lk.dispose();
-        nb1024Blk.dispose();
-        nb512Blk.dispose();
-        nb256Blk.dispose();
-        nb128Blk.dispose();
-        nb64Blk.dispose();
-        nb32Blk.dispose();
-        nb16Blk.dispose();
-        nb8Blk.dispose();
-        nb4Blk.dispose();
-        nb2Blk.dispose();
-        bkgrd.dispose();
-        titleBlk.dispose();
-        volumeBlk.dispose();
         collapsedSound.dispose();
+        textureAtlas.dispose();
     }
 
     private static NumberBlock searchArray(int row, int col, List<NumberBlock> blks){
         try {
             List<NumberBlock> searchBlk = new ArrayList<>();
 
-            //hard coding gameboard indexes
+            //hard coding gameboard indexes TODO:  This will have to be dynamic when introducing different game modes
+            //TODO: Is there an easy way keep track of the rows that doesn't inolve spliting?
             if (row > 0) {
                 switch (row) {
                     case 1:

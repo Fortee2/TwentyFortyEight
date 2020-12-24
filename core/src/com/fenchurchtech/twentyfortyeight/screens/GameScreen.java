@@ -59,6 +59,7 @@ public class GameScreen implements Screen, IUserAction {
 
     private void startGame() {
         playBoard = gameBoard.initializeBlocks(4);
+        gameBoard.resetMoveCount();
         cpyBoard = GameBoard.copyGameBoard(playBoard);
     }
 
@@ -70,12 +71,13 @@ public class GameScreen implements Screen, IUserAction {
         camera.update();
         _game.batch.setProjectionMatrix(camera.combined);
 
-        gameBoard.draw(playBoard, _game.batch);
+        gameBoard.draw(playBoard, _game.batch, _game.bitmapFont);
 
         if(!swipeDirecton.isEmpty()){
             //returns false when all moves have been made
             if(!gameBoard.executeShift(swipeDirecton,playBoard)) {
                 swipeDirecton = "";
+                gameBoard.incrementMoveCount();
                 resetBoardState(playBoard);
                 if(gameBoard.didGameBoardChange(cpyBoard, playBoard)) {
                     if(gameBoard.isPlaySound()){

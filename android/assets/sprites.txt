@@ -1,0 +1,159 @@
+sprites.png
+size: 793, 1914
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+2
+  rotate: false
+  xy: 259, 709
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+4
+  rotate: false
+  xy: 1, 1210
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+8
+  rotate: false
+  xy: 1, 1468
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+16
+  rotate: false
+  xy: 1, 694
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+32
+  rotate: false
+  xy: 259, 967
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+64
+  rotate: false
+  xy: 259, 1225
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+128
+  rotate: false
+  xy: 534, 517
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+256
+  rotate: false
+  xy: 517, 775
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+512
+  rotate: false
+  xy: 517, 1033
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+1024
+  rotate: false
+  xy: 534, 259
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+2048
+  rotate: false
+  xy: 1, 952
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+background
+  rotate: true
+  xy: 1, 180
+  size: 454, 531
+  orig: 454, 531
+  offset: 0, 0
+  index: -1
+Gameover
+  rotate: false
+  xy: 1, 636
+  size: 480, 56
+  orig: 491, 66
+  offset: 5, 6
+  index: -1
+mute
+  rotate: false
+  xy: 517, 1291
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+overlay
+  rotate: false
+  xy: 510, 682
+  size: 13, 13
+  orig: 13, 13
+  offset: 0, 0
+  index: -1
+retry
+  rotate: false
+  xy: 1, 1
+  size: 535, 177
+  orig: 600, 256
+  offset: 44, 47
+  index: -1
+settings
+  rotate: true
+  xy: 483, 636
+  size: 44, 45
+  orig: 44, 45
+  offset: 0, 0
+  index: -1
+Title
+  rotate: true
+  xy: 1, 1726
+  size: 187, 200
+  orig: 191, 204
+  offset: 3, 3
+  index: -1
+volume
+  rotate: true
+  xy: 538, 1
+  size: 256, 254
+  orig: 256, 256
+  offset: 0, 1
+  index: -1
+white
+  rotate: false
+  xy: 483, 682
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+wood_blank
+  rotate: false
+  xy: 259, 1483
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+wood_blocks
+  rotate: false
+  xy: 517, 1549
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
