@@ -1,81 +1,81 @@
 sprites.png
-size: 793, 1914
+size: 774, 1961
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 2
   rotate: false
-  xy: 259, 709
+  xy: 1, 894
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 4
   rotate: false
-  xy: 1, 1210
+  xy: 259, 1152
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 8
   rotate: false
-  xy: 1, 1468
+  xy: 259, 1410
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 16
   rotate: false
-  xy: 1, 694
+  xy: 517, 672
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 32
   rotate: false
-  xy: 259, 967
+  xy: 1, 1152
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 64
   rotate: false
-  xy: 259, 1225
+  xy: 1, 1410
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 128
   rotate: false
-  xy: 534, 517
+  xy: 259, 636
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 256
   rotate: false
-  xy: 517, 775
+  xy: 517, 930
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 512
   rotate: false
-  xy: 517, 1033
+  xy: 517, 1188
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 1024
   rotate: false
-  xy: 534, 259
+  xy: 1, 636
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 2048
   rotate: false
-  xy: 1, 952
+  xy: 259, 894
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
@@ -88,22 +88,22 @@ background
   offset: 0, 0
   index: -1
 Gameover
-  rotate: false
-  xy: 1, 636
+  rotate: true
+  xy: 635, 190
   size: 480, 56
   orig: 491, 66
   offset: 5, 6
   index: -1
 mute
   rotate: false
-  xy: 517, 1291
+  xy: 517, 1446
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 overlay
   rotate: false
-  xy: 510, 682
+  xy: 740, 28
   size: 13, 13
   orig: 13, 13
   offset: 0, 0
@@ -117,42 +117,49 @@ retry
   index: -1
 settings
   rotate: true
-  xy: 483, 636
+  xy: 693, 190
   size: 44, 45
   orig: 44, 45
   offset: 0, 0
   index: -1
+tap
+  rotate: true
+  xy: 534, 190
+  size: 84, 99
+  orig: 84, 99
+  offset: 0, 0
+  index: -1
 Title
   rotate: true
-  xy: 1, 1726
+  xy: 538, 1
   size: 187, 200
   orig: 191, 204
   offset: 3, 3
   index: -1
 volume
-  rotate: true
-  xy: 538, 1
+  rotate: false
+  xy: 517, 1704
   size: 256, 254
   orig: 256, 256
   offset: 0, 1
   index: -1
 white
   rotate: false
-  xy: 483, 682
+  xy: 740, 1
   size: 25, 25
   orig: 25, 25
   offset: 0, 0
   index: -1
 wood_blank
   rotate: false
-  xy: 259, 1483
+  xy: 1, 1704
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 wood_blocks
   rotate: false
-  xy: 517, 1549
+  xy: 259, 1668
   size: 256, 256
   orig: 256, 256
   offset: 0, 0

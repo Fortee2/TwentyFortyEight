@@ -36,7 +36,7 @@ public class GameBoard {
 
     private final Sound collapsedSound =  Gdx.audio.newSound(Gdx.files.internal("click_005.ogg"));
 
-    public TextureAtlas textureAtlas;
+    private TextureAtlas textureAtlas;
 
     private boolean playSound = true;
     private boolean gameOver = false;
@@ -46,6 +46,7 @@ public class GameBoard {
         textureAtlas =  new TextureAtlas(Gdx.files.internal("sprites.txt"));
 
         bkgrd = textureAtlas.createSprite("background");
+        bkgrd.rotate90(true);
 
          nb4Blk =  textureAtlas.createSprite("4");
          nb8Blk =  textureAtlas.createSprite("8");
@@ -120,8 +121,11 @@ public class GameBoard {
         batch.begin();
         float x = 0.0f, y =600.0f;
 
-        batch.draw(bkgrd, 0,0,480,800);
-        batch.draw(titleBlk, 10,675,75,75);
+        bkgrd.setBounds(0,0,480,800);
+
+        bkgrd.draw(batch);
+        //batch.draw(bkgrd, 0,0,480,800);
+        //batch.draw(titleBlk, 10,675,75,75);
 
 /*        bitmapFont.setColor(Color.WHITE);
         bitmapFont.getData().setScale(2);
@@ -163,7 +167,10 @@ public class GameBoard {
         batch.draw(whiteBlk,0,730, 480,70);
 
         if(playSound) {
-            batch.draw(volumeBlk, 390, 740, 50, 50);
+            //volumeBlk.setPosition(390,740);
+            volumeBlk.setBounds(390,740,50,50);
+            volumeBlk.draw(batch);
+            //batch.draw(volumeBlk, 390, 740, 50, 50);
         }else {
             batch.draw(muteBlk, 390, 740, 50, 50);
         }
